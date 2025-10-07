@@ -26,7 +26,7 @@ Thumbs.db
 .idea/
 
 # npm package lock
-package-lock.json
+# package-lock.json
 yarn.lock
 
 # Client build folders (if using React/Vue/Angular)
