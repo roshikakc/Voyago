@@ -20,8 +20,8 @@ const Header = () => {
 
                 {/* logo */}
                 <div className='flex item-center gap-3'>
-                    <Link to='/'>
-                        <img src={logo} alt='Logo' className='w-26 h-24 object-contain' />
+                    <Link to='/home'>
+                        <img src={logo} alt='Logo' className='w-24 h-24 object-contain' />
                     </Link>
                 </div>
 
