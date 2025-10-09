@@ -98,7 +98,7 @@ export default function Home() {
                 <h1 className='text-xl md:text-4xl font-bold'>Let's explore your popular Destination</h1>
                 <h4 className='text-xl text-gray-500 '>Explore some of our most loved travel spots</h4>
 
-              <div className='flex flex-wrap gap-6 justify-center'>
+              <div className='flex flex-wrap gap-6 py-6 justify-center'>
                 {/* card1 */}
                 <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
                     <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>

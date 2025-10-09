@@ -1,25 +1,38 @@
 import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
-import Home from "./pages/home";
-import Destination from "./pages/destinations";
-import DestinationDetails from "./pages/destinationDetails";
-import Header from "./components/header";
-
+import Home from "./pages/Home";
+import Destination from "./pages/Destinations";
+import Plan from "./pages/Plan";
+import DestinationDetails from "./pages/DestinationDetails";
+import Itinerary from "./pages/Itinerary";
+import Profile from "./pages/Profile";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 
 
 function App(){
   return(
-   <>
+   
   <BrowserRouter>
+  <div className="flex flex-col min-h-screen">
       <Header/>
+
+      <main className="flex-grow">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/destination" element={<Destination />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/plan" element={<Plan/>} />
+        <Route path="/itinerary" element={<Itinerary/>} />
         <Route path="/destination/:id" element={<DestinationDetails />} />
       </Routes> 
+      </main>
+
+      <Footer/>
+      </div>
       </BrowserRouter>
-   </>
+   
   );
 }
 export default App;
