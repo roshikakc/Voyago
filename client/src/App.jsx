@@ -25,7 +25,8 @@ function App(){
         <Route path="/profile" element={<Profile />} />
         <Route path="/plan" element={<Plan/>} />
         <Route path="/itinerary" element={<Itinerary/>} />
-        <Route path="/destination/:id" element={<DestinationDetails />} />
+        {/* <Route path="/destination/:id" element={<DestinationDetails />} /> */}
+        <Route path="/destinationdetails" element={<DestinationDetails />} />
       </Routes> 
       </main>
 

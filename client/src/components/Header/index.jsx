@@ -42,6 +42,9 @@ const Header = () => {
                     <li>
                         <Link to="/profile" className='text-[20px] text-[#0c4160] font-[600]'>Profile</Link>
                     </li>
+                    <li>
+                        <Link to="/destinationdetails" className='text-[20px] text-[#0c4160] font-[600]'>Details</Link>
+                    </li>
                 </ul>
 
                 {/* Auth buttons */}
