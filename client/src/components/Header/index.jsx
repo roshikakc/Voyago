@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import logo from '../../assets/image/logo.png';
 // import { FaHouseUser } from "react-icons/fa";
 
 const Header = () => {
-
-    // logging check
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const handleLogin = () => {
-        setIsLoggedIn(true);
-    };
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-    };
 
     return (
         <header>
@@ -49,18 +41,19 @@ const Header = () => {
 
                 {/* Auth buttons */}
                 <div className='flex items-center gap-3'>
-                    {isLoggedIn ? (
-                        <Link to='/profile'>
-                            <FaHouseUser className='text-white w-8 h-8 cursor-pointer' />
+                    {/* when user is signed in */}
+                    <SignedIn>
+                        <UserButton afterSignOutUrl="/" />
+                    </SignedIn>
+
+                    <SignedOut>
+                        <Link to="/log-in"> <button className='btn'>Log in</button>
                         </Link>
-                    ) : (
-                        <>
-                            <Link to=""> <button className='btn'>Log in</button>
-                            </Link>
-                            <Link to=""> <button className='btn'>Sign up</button>
-                            </Link>
-                        </>
-                    )}
+
+                        <Link to="/sign-up"> <button className='btn'>Sign up</button>
+                        </Link>
+                    </SignedOut>
+
                 </div>
             </div>
         </header>

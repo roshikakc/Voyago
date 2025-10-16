@@ -23,7 +23,7 @@ const itinerarySchema = new mongoose.Schema(
             required:true,
         },
 
-        numberodDays: {
+        numberofDays: {
             type: number, 
         },
 
@@ -70,9 +70,6 @@ const itinerarySchema = new mongoose.Schema(
         //         duration: Number,
         //     },
         // ],
-
-        createdAt: { type: Date, default:Date.now},
-        updatedAt: { type: Date, default:Date.now},
 
     },
     {timestamps:true}

@@ -6,6 +6,8 @@ import DestinationDetails from "./pages/DestinationDetails";
 import Itinerary from "./pages/Itinerary";
 import Profile from "./pages/Profile";
 import Header from "./components/Header";
+import LogIn from "./pages/Log-In";
+import SignUp from "./pages/Sign-Up";
 import Footer from "./components/Footer";
 
 
@@ -27,6 +29,8 @@ function App(){
         <Route path="/itinerary" element={<Itinerary/>} />
         {/* <Route path="/destination/:id" element={<DestinationDetails />} /> */}
         <Route path="/destinationdetails" element={<DestinationDetails />} />
+        <Route path="/log-in" element={<LogIn/>} />
+        <Route path="/sign-up" element={<SignUp/>}/>
       </Routes> 
       </main>
 
