@@ -2,7 +2,7 @@ import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
 import Home from "./pages/Home";
 import Destination from "./pages/Destinations";
 import Plan from "./pages/Plan";
-import DestinationDetails from "./pages/DestinationDetails";
+import DestinationDetailsPage from "./pages/DestinationDetailsPage";
 import Itinerary from "./pages/Itinerary";
 import Profile from "./pages/Profile";
 import Header from "./components/Header";
@@ -28,7 +28,7 @@ function App(){
         <Route path="/plan" element={<Plan/>} />
         <Route path="/itinerary" element={<Itinerary/>} />
         {/* <Route path="/destination/:id" element={<DestinationDetails />} /> */}
-        <Route path="/destinationdetails" element={<DestinationDetails />} />
+        <Route path="/destinationdetailspage" element={<DestinationDetailsPage />} />
         <Route path="/log-in" element={<LogInPage/>} />
         <Route path="/sign-up" element={<SignUpPage/>}/>
       </Routes> 

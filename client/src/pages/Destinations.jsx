@@ -4,6 +4,16 @@ import t1 from './../assets/image/t1.png';
 import t2 from './../assets/image/t2.jpeg';
 import t3 from './../assets/image/t3.png';
 import { FaArrowRight } from 'react-icons/fa';
+import { DestinationCard } from '../components/destination-card';
+
+const DestinationData = [
+    {
+        id: 1,
+        image: t1 ,
+        title: "Bali",
+        location: "Indonesia"
+    }
+]
 
 export default function Destination() {
     return (
@@ -16,82 +26,53 @@ export default function Destination() {
 
             <div className='flex flex-wrap gap-6 justify-center py-6'>
                 {/* card1 */}
-                <Link to='/destinationdetails'>
-                    <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                        <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                            <img src={t1} alt='place' className='w-full h-full object-cover' />
-                        </div>
-
-                        <div className='p-4 flex flex-col items-center'>
-                            <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                            <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                        </div>
-                    </div>
+                <Link to='/destinationdetailspage'>
+                    {
+                        DestinationData.map((data) => (
+                            <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                        ))
+                    }
                 </Link>
                 {/* card2 */}
-                <Link to='/destinationdetails'>
-                    <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                        <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                            <img src={t1} alt='place' className='w-full h-full object-cover' />
-                        </div>
-
-                        <div className='p-4 flex flex-col items-center'>
-                            <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                            <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                        </div>
-                    </div>
+                <Link to='/destinationdetailspage'>
+                    {
+                        DestinationData.map((data) => (
+                            <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                        ))
+                    }
                 </Link>
                 {/* card3 */}
-                <Link to='/destinationdetails'>
-                    <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                        <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                            <img src={t1} alt='place' className='w-full h-full object-cover' />
-                        </div>
-
-                        <div className='p-4 flex flex-col items-center'>
-                            <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                            <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                        </div>
-                    </div>
+                <Link to='/destinationdetailspage'>
+                    {
+                        DestinationData.map((data) => (
+                            <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                        ))
+                    }
                 </Link>
                 {/* card4 */}
-                <Link to='/destinationdetails'>
-                    <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                        <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                            <img src={t1} alt='place' className='w-full h-full object-cover' />
-                        </div>
 
-                        <div className='p-4 flex flex-col items-center'>
-                            <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                            <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                        </div>
-                    </div>
+                <Link to='/destinationdetailspage'>
+                    {
+                        DestinationData.map((data) => (
+                            <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                        ))
+                    }
                 </Link>
                 {/* card5 */}
-                <Link to='/destinationdetails'>
-                    <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                        <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                            <img src={t1} alt='place' className='w-full h-full object-cover' />
-                        </div>
-
-                        <div className='p-4 flex flex-col items-center'>
-                            <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                            <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                        </div>
-                    </div>
+                <Link to='/destinationdetailspage'>
+                    {
+                        DestinationData.map((data) => (
+                            <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                        ))
+                    }
                 </Link>
                 {/* card6 */}
-                <Link to='/destinationdetails'>
-                    <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                        <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                            <img src={t1} alt='place' className='w-full h-full object-cover' />
-                        </div>
-
-                        <div className='p-4 flex flex-col items-center'>
-                            <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                            <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                        </div>
-                    </div>
+                <Link to='/destinationdetailspage'>
+                    {
+                        DestinationData.map((data) => (
+                            <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                        ))
+                    }
                 </Link>
 
 

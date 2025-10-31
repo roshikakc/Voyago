@@ -4,6 +4,38 @@ import t1 from './../assets/image/t1.png';
 import t2 from './../assets/image/t2.jpeg';
 import t3 from './../assets/image/t3.png';
 import { FaArrowRight } from 'react-icons/fa';
+import { AboutUsCard } from '../components/about-us-card';
+import { DestinationCard } from '../components/destination-card';
+
+const AboutUsData = [
+    {
+        id: 1,
+        label: "50K+",
+        description: "Destination"
+    },
+    {
+        id: 2,
+        label: "50K+",
+        description: "Itineraries"
+    },
+    {
+        id: 3,
+        label: "25K+",
+        description: "Happy travellers"
+    },
+]
+
+
+const DestinationData = [
+    {
+        id: 1,
+        image: t1,
+        title: "Bali",
+        location: "Indonesia"
+    }
+]
+
+
 
 export default function Home() {
     return (
@@ -14,7 +46,7 @@ export default function Home() {
                     <h4 className='text font-semibold flex items-center gap-2'>Explore the world </h4>
                     <h1 className='text-4xl md:text-5xl font-extrabold leading-tight'>Get out of the house and let's travel</h1>
                     <p className='text-gray-600 text-lg'>Welcome to Voyago, your ultimate travel companion for exploring the world! Whether you're seeking beaches, bustling cityscapes, or hidden gems off the beaten path, we're here to inspire and guide your adventures.</p>
-                   <Link to="/plan" className="inline-block px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-blue-800 hover:text-white w-max transition-all duration-300 transform hover:scale-105 shadow-md"> Plan your trip</Link>
+                    <Link to="/plan" className="inline-block px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-blue-500 hover:text-white w-max transition-all duration-300 transform hover:scale-105 shadow-md"> Plan your trip</Link>
 
 
                 </div>
@@ -46,21 +78,14 @@ export default function Home() {
 
                 <div className='md:w-1/2 flex flex-col gap-6 '>
                     <h2 className='text-xl md:text-4xl font-bold'>About Us</h2>
-                    <p className='text-gray-700 text-lg'> Voyago is your ultimate travel companion for exploring the world! Whether you're seeking beaches, bustling cityscapes, or hidden gems off the beaten path, we're here to inspire and guide your adventures.</p>
+                    <p className='text-gray-900 text-lg'> Voyago is your ultimate travel companion for exploring the world! Whether you're seeking beaches, bustling cityscapes, or hidden gems off the beaten path, we're here to inspire and guide your adventures.</p>
 
                     <div className='flex gap-4'>
-                        <button className='flex flex-col items-center justify-center px-8 py-4 !bg-[#0c4160] text-[#ccd8e4] rounded-xl shadow-md border-none appearance-none outline-none focus:outline-none'>
-                            <span className='text-3xl font-extrabold'>50K+</span>
-                            <span className='text-sm text-gray-400'>Destinations</span>
-                        </button>
-                        <button className='flex flex-col items-center justify-center px-8 py-4 !bg-[#0c4160] text-[#ccd8e4] rounded-xl shadow-md border-none appearance-none outline-none focus:outline-none'>
-                            <span className='text-3xl font-extrabold'>50K+</span>
-                            <span className='text-sm text-gray-400'>Itineraries</span>
-                        </button>
-                        <button className='flex flex-col items-center justify-center px-8 py-4 !bg-[#0c4160] text-[#ccd8e4] rounded-xl shadow-md border-none appearance-none outline-none focus:outline-none'>
-                            <span className='text-3xl font-extrabold'>25K+</span>
-                            <span className='text-sm text-gray-400'>Happy travellers</span>
-                        </button>
+                        {
+                            AboutUsData.map((data) => (
+                                <AboutUsCard key={data.id} label={data.label} description={data.description} />
+                            ))
+                        }
                     </div>
                 </div>
             </section>
@@ -98,84 +123,68 @@ export default function Home() {
                 <h1 className='text-xl md:text-4xl font-bold'>Let's explore your popular Destination</h1>
                 <h4 className='text-xl text-gray-500 '>Explore some of our most loved travel spots</h4>
 
-              <div className='flex flex-wrap gap-6 py-6 justify-center'>
-                {/* card1 */}
-                <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                    <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                        <img src={t1} alt='place' className='w-full h-full object-cover'/>
-                    </div>
-
-                    <div className='p-4 flex flex-col items-center'>
-                        <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                        <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                    </div>
-                    </div> 
-                {/* card2 */}
-                <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                    <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                        <img src={t1} alt='place' className='w-full h-full object-cover'/>
-                    </div>
-
-                    <div className='p-4 flex flex-col items-center'>
-                        <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                        <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                    </div>
-                    </div> 
-                {/* card3 */}
-                <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                    <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                        <img src={t1} alt='place' className='w-full h-full object-cover'/>
-                    </div>
-
-                    <div className='p-4 flex flex-col items-center'>
-                        <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                        <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                    </div>
-                    </div> 
-                {/* card4 */}
-                <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                    <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                        <img src={t1} alt='place' className='w-full h-full object-cover'/>
-                    </div>
-
-                    <div className='p-4 flex flex-col items-center'>
-                        <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                        <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                    </div>
-                    </div> 
-                {/* card5 */}
-                <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                    <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                        <img src={t1} alt='place' className='w-full h-full object-cover'/>
-                    </div>
-
-                    <div className='p-4 flex flex-col items-center'>
-                        <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                        <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                    </div>
-                    </div> 
-                {/* card6 */}
-                <div className='max-w-xs bg-gray-50 rounded-2xl shadow-lg  p-4 overflow-hidden'>
-                    <div className='w-full h-55 bg-gray-200 overflow-hidden rounded-xl'>
-                        <img src={t1} alt='place' className='w-full h-full object-cover'/>
-                    </div>
-
-                    <div className='p-4 flex flex-col items-center'>
-                        <h3 className='text-xl font-bold text-gray-800'>Bali</h3>
-                        <p className='text-gray-500 text-sm mt-1'>Indonesia</p>
-                    </div>
-                    </div> 
-                   <Link to="/destination" className=' inline-block px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full md:w-max text-center transition'>More destinations 
+                <div className='flex flex-wrap gap-6 py-6 justify-center'>
+                    {/* card1 */}
+                    <Link to='/destinationdetailspage'>
+                        {
+                            DestinationData.map((data) => (
+                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                            ))
+                        }
                     </Link>
+                    {/* card2 */}
+                    <Link to='/ destinationdetailspage'>
+                        {
+                            DestinationData.map((data) => (
+                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                            ))
+                        }
+                    </Link>
+                    {/* card3 */}
+                    <Link to='/ destinationdetailspage'>
+                        {
+                            DestinationData.map((data) => (
+                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                            ))
+                        }
+                    </Link>
+                    {/* card4 */}
+                    <Link to='/ destinationdetailspage'>
+                        {
+                            DestinationData.map((data) => (
+                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                            ))
+                        }
+                    </Link>
+                    {/* card5 */}
+                    <Link to='/ destinationdetailspage'>
+                        {
+                            DestinationData.map((data) => (
+                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                            ))
+                        }
+                    </Link>
+                    {/* card6 */}
+                    <Link to='/destinationdetailspage'>
+                        {
+                            DestinationData.map((data) => (
+                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
+                            ))
+                        }
+                    </Link>
+
                 </div>
+                <Link to="/destination" className=' px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full md:w-max text-center transition'>
+                    More destinations
+                </Link>
             </section>
 
             {/* last part */}
             <section className='flex flex-col gap-6 py-24 items-center my-25  bg-gradient-to-b from-blue-50 via-blue-100 to-blue-50 '>
                 <h1 className='text-xl md:text-4xl font-bold'>Ready to start your adventure?</h1>
-                <h4 className='text-xl text-gray-400 '>Joins thousands of travellers who trust voyago to plan their perfect trips</h4>
+                <h4 className='text-xl text-gray-400 '>Join thousands of travellers who trust voyago to plan their perfect trips</h4>
                 <Link to="/plan" className="inline-flex items-center px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-blue-800 hover:text-white w-max shadow-md gap-2"> Plan your trip <FaArrowRight className="text-lg" /> </Link>
-                </section>
+            </section>
         </>
     )
 }

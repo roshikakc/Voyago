@@ -34,7 +34,7 @@ const Header = () => {
                         <Link to="/profile" className='text-[20px] text-[#0c4160] font-[600]'>Profile</Link>
                     </li>
                     <li>
-                        <Link to="/destinationdetails" className='text-[20px] text-[#0c4160] font-[600]'>Details</Link>
+                        <Link to="/destinationdetailspage" className='text-[20px] text-[#0c4160] font-[600]'>Details</Link>
                     </li>
                 </ul>
 
@@ -43,7 +43,8 @@ const Header = () => {
                     {/* when user is signed in */}
                     
            
-                        <Link to="/log-in"> <button className='btn'>Log in</button>
+                        <Link to="/log-in" className='btn hover:bg-[#0000]!'> 
+                            Log in
                         </Link>
 
                         <Link to="/sign-up"> <button className='btn'>Sign up</button>
