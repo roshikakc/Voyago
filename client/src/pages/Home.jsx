@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import t1 from './../assets/image/t1.png';
 import t2 from './../assets/image/t2.jpeg';
 import t3 from './../assets/image/t3.png';
@@ -46,7 +46,8 @@ export default function Home() {
                     <h4 className='text font-semibold flex items-center gap-2'>Explore the world </h4>
                     <h1 className='text-4xl md:text-5xl font-extrabold leading-tight'>Get out of the house and let's travel</h1>
                     <p className='text-gray-600 text-lg'>Welcome to Voyago, your ultimate travel companion for exploring the world! Whether you're seeking beaches, bustling cityscapes, or hidden gems off the beaten path, we're here to inspire and guide your adventures.</p>
-                    <Link to="/plan" className="inline-block px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-blue-500 hover:text-white w-max transition-all duration-300 transform hover:scale-105 shadow-md"> Plan your trip</Link>
+                    <Link to="/plan" state={{from: location.pathname}}
+                     className="inline-block px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-blue-500 hover:text-white w-max transition-all duration-300 transform hover:scale-105 shadow-md"> Plan your trip</Link>
 
 
                 </div>

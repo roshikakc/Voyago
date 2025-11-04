@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
+import User from '../models/user.js';
 
 const connectDB= async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("MongoDB connected");
+       const conn= await mongoose.connect(process.env.MONGO_URI);
+       console.log(await User.find());
+        console.log(`MongoDB connected: ${conn.connection.name}`);
     }
     catch(error){
         console.log("MongoDB error:", error);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function Plan() {
@@ -14,6 +14,7 @@ export default function Plan() {
 
     });
 
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -24,11 +25,23 @@ export default function Plan() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!formData.country || !formData.city) {
-            alert("Please fill out all required fields.");
-            return;
-        }
+        const newErrors = {};
 
+        if (!formData.country.trim()) newErrors.country = "Country is required.";
+        if (!formData.city.trim()) newErrors.city = "City is required.";
+        if (!formData.startDate) newErrors.startDate = "Start date is required.";
+        if (!formData.endDate) newErrors.endDate = "End date is required.";
+        if (!formData.startDate && formData.endDate && new Date(formData.startDate) > new Date(formData.endDate)) {
+            newErrors.endDate = "End date cannot be before start date.";
+        }
+        if (!formData.budget) newErrors.budget = "Please select a budget.";
+        if (!formData.travellers || formData.travellers < 1)
+            newErrors.budget = "Must have at least one traveller.";
+        if (!formData.interests.trim()) newErrors.interests = "Interests is required.";
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) return;
         console.log("Form submitted:", formData);
 
         navigate('/itinerary');
@@ -52,61 +65,69 @@ export default function Plan() {
                         <label className='text-xl text-gray-700 font-semibold mb-2'>Country</label>
                         <input type='text' name='country' value={formData.country} onChange={handleChange}
                             className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'
-                            placeholder='Which country do you want to go?' required />
+                            placeholder='Which country do you want to go?' />
+                        {errors.country && <p className='text-red-500 text-sm mt-1'>{errors.country}</p>}
                     </div>
 
                     <div>
                         <label className='text-xl text-gray-700 font-semibold mb-1'>City</label>
                         <input type='text' name='city' value={formData.city} onChange={handleChange}
                             className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'
-                            placeholder='Enter city' required />
+                            placeholder='Enter city' />
+                        {errors.city && <p className='text-red-500 text-sm mt-1'>{errors.city}</p>}
                     </div>
 
                     {/* date */}
                     <div>
-                    <div className='grid grids-cols-1 md:grids-cols-2 gap-5'>
+                        <div className='grid grids-cols-1 md:grids-cols-2 gap-5'>
                             <label className='w-32 text-xl text-gray-700 font-semibold'>Start Date</label>
                             <input type='date' name='startDate' value={formData.startDate} onChange={handleChange}
                                 className='flex-1 bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'
-                                required />
-       
+                            />
+                            {errors.startDate && <p className='text-red-500 text-sm mt-1'>{errors.startDate}</p>}
+
                             <label className='text-xl text-gray-700 font-semibold mb-1'>End Date</label>
                             <input type='date' name='endDate' value={formData.endDate} onChange={handleChange}
                                 className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'
-                                required />
+                            />
+                            {errors.endDate && <p className='text-red-500 text-sm mt-1'>{errors.endDate}</p>}
                         </div>
                     </div>
 
                     <div>
                         <label className='text-xl text-gray-700 font-semibold mb-1'>Budget Range</label>
-                        <select name='budget' value={formData.budget} onChange={handleChange} 
-                        className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400 text-gray-700 invalid:text-gray-400'
-                         required>
-                            <option value= ''disabled >Select your budget</option>
-                            <option value= '20,000'>Rs.10,000 - Rs.20,000</option>
-                            <option value= '30,000'>Rs.20,000 - Rs.30,000</option>
-                            <option value= '40,000'>Rs.30,000 - Rs.40,000</option>
-                            <option value= '50,000'>Rs.40,000 - Rs.50,000</option>
-                            <option value= '60,000'>Rs.50,000 - Rs.60,000</option>
-                            <option value= '60,001'>Above Rs.60,000</option>
-                         </select>
+                        <select name='budget' value={formData.budget} onChange={handleChange}
+                            className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400 text-gray-700 invalid:text-gray-400'
+                        >
+                            <option value='' disabled >Select your budget</option>
+                            <option value='20,000'>Rs.10,000 - Rs.20,000</option>
+                            <option value='30,000'>Rs.20,000 - Rs.30,000</option>
+                            <option value='40,000'>Rs.30,000 - Rs.40,000</option>
+                            <option value='50,000'>Rs.40,000 - Rs.50,000</option>
+                            <option value='60,000'>Rs.50,000 - Rs.60,000</option>
+                            <option value='60,001'>Above Rs.60,000</option>
+                        </select>
+
+                        {errors.budget && <p className='text-red-500 text-sm mt-1'>{errors.budget}</p>}
                     </div>
                     <div>
                         <label className='text-xl text-gray-700 font-semibold mb-1'>Number of travellers</label>
                         <input type='number' name='travellers' value={formData.travellers} onChange={handleChange} placeholder='Number of travellers'
                             className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'
                             min='1' max='20' />
+                            {errors.travellers && <p className='text-red-500 text-sm mt-1'>{errors.travellers}</p>}
                     </div>
                     <div>
                         <label className='text-xl text-gray-700 font-semibold mb-1'>Interests</label>
                         <textarea name='interests' value={formData.interests} onChange={handleChange} rows='3'
                             placeholder='e.g. beaches, hiking, museums...'
-                            className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'>
+                            className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400' >
                         </textarea>
+                        {errors.interests && <p className='text-red-500 text-sm mt-1'>{errors.interests}</p>}
                     </div>
 
                     <button type='submit' className='w-full border bg-[#0c4160] text-[#ccd8e4] text-extrabold text-xl py-2 rounded-md cursor-pointer'>Generate</button>
-                    
+
                 </form>
 
             </section>
