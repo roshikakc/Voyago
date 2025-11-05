@@ -29,8 +29,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
          
             <Route path="/itinerary" element={<Itinerary />} />
-            {/* <Route path="/destination/:id" element={<DestinationDetails />} /> */}
-            <Route path="/destinationdetailspage" element={<DestinationDetailsPage />} />
+            <Route path="/destination/:id" element={<DestinationDetailsPage />} />
+            {/* <Route path="/destinationdetailspage" element={<DestinationDetailsPage />} /> */}
             <Route path="/login" element={<LogInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
 

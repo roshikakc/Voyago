@@ -9,3 +9,5 @@ const userHistorySchema = new mongoose.Schema({
     last_viewed: { type: Date, default: Date.now }
 
 });
+
+export default mongoose.model("User History", userHistorySchema);

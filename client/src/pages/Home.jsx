@@ -125,55 +125,7 @@ export default function Home() {
                 <h4 className='text-xl text-gray-500 '>Explore some of our most loved travel spots</h4>
 
                 <div className='flex flex-wrap gap-6 py-6 justify-center'>
-                    {/* card1 */}
-                    <Link to='/destinationdetailspage'>
-                        {
-                            DestinationData.map((data) => (
-                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
-                            ))
-                        }
-                    </Link>
-                    {/* card2 */}
-                    <Link to='/ destinationdetailspage'>
-                        {
-                            DestinationData.map((data) => (
-                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
-                            ))
-                        }
-                    </Link>
-                    {/* card3 */}
-                    <Link to='/ destinationdetailspage'>
-                        {
-                            DestinationData.map((data) => (
-                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
-                            ))
-                        }
-                    </Link>
-                    {/* card4 */}
-                    <Link to='/ destinationdetailspage'>
-                        {
-                            DestinationData.map((data) => (
-                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
-                            ))
-                        }
-                    </Link>
-                    {/* card5 */}
-                    <Link to='/ destinationdetailspage'>
-                        {
-                            DestinationData.map((data) => (
-                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
-                            ))
-                        }
-                    </Link>
-                    {/* card6 */}
-                    <Link to='/destinationdetailspage'>
-                        {
-                            DestinationData.map((data) => (
-                                <DestinationCard key={data.id} image={data.image} title={data.title} location={data.location} />
-                            ))
-                        }
-                    </Link>
-
+                  
                 </div>
                 <Link to="/destination" className=' px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full md:w-max text-center transition'>
                     More destinations
