@@ -6,6 +6,8 @@ const connectDB= async () => {
        const conn= await mongoose.connect(process.env.MONGO_URI);
        console.log(await User.find());
         console.log(`MongoDB connected: ${conn.connection.name}`);
+        console.log(`Using database: ${conn.connection.db.databaseName}`);
+    console.log(` Collections: ${Object.keys(conn.connection.collections)}`);
     }
     catch(error){
         console.log("MongoDB error:", error);

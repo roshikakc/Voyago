@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect}from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import t1 from './../assets/image/t1.png';
 import t2 from './../assets/image/t2.jpeg';
@@ -26,18 +26,62 @@ const AboutUsData = [
 ]
 
 
-const DestinationData = [
-    {
-        id: 1,
-        image: t1,
-        title: "Bali",
-        location: "Indonesia"
-    }
-]
 
 
 
 export default function Home() {
+
+     const [destinations, setDestinations] = useState([]);
+    
+        useEffect(() => {
+            const fetchDestinations = async () => {
+                try {
+                     const desiredNames = ["Pattaya city", "Sapporo", "Seoul", "Zurich", "Cancun", "Kyoto"]
+                     const query = desiredNames.map(n=> encodeURIComponent(n)).join(',');
+
+                    // from database 
+                    const res = await fetch(`http://localhost:5000/api/destination?names=${query}`);
+                    const data = await res.json();
+                    console.log("Loaded from DB:", data);
+    
+                    //if missing, fetch them individually
+                    const foundNames = data.map(d => d.name);
+                    const missing = desiredNames.filter(n => !foundNames.includes(n));
+    
+                    let apiData = [];
+                    if (missing.length > 0) {
+                        console.log("Fetching ,issing destinations:", missing);
+                        apiData = await Promise.all(
+                            missing.map(async (n) => {
+                                try {
+                                    const res = await fetch(`http://localhost:5000/api/destination/${n}`);
+                                    if (!res.ok) throw new Error("Failed to fetch " + n);
+                                    return await res.json();
+                                } catch (err) {
+                                    console.error("Error fetching:", n, err);
+                                    return null;
+                                }
+                            })
+                        );
+                    }
+    
+                    const merged = [...data, ...apiData.filter(Boolean)]; //merging database and api data
+    
+                    const unique = merged.filter(
+                        (item, index, self) =>
+                            index === self.findIndex(
+                                (d) => d._id === item._id || d.name === item.name
+                            )
+                    );
+                    setDestinations(unique);
+                } catch (err) {
+                    console.error("Error loading destinations:", err);
+    
+                }
+            };
+            fetchDestinations();
+        }, []);
+    
     return (
         <>
             <section className='flex flex-col md:flex-row items-center justify-between gap-12 px-8 pb-30 md:px-16 py-16  relative '>
@@ -124,9 +168,17 @@ export default function Home() {
                 <h1 className='text-xl md:text-4xl font-bold'>Let's explore your popular Destination</h1>
                 <h4 className='text-xl text-gray-500 '>Explore some of our most loved travel spots</h4>
 
-                <div className='flex flex-wrap gap-6 py-6 justify-center'>
-                  
-                </div>
+                <div className='flex flex-wrap gap-6 justify-center py-6'>
+                                {destinations
+                                    // .filter(dest => dest && dest.name) // ensures defined
+                                    .map(dest => (
+                                        <DestinationCard key={dest._id || dest.name}
+                                            id={dest._id} image={dest.photoUrl} title={dest.name}
+                                            location={dest.country} />
+                                    ))}
+                
+                
+                            </div>
                 <Link to="/destination" className=' px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full md:w-max text-center transition'>
                     More destinations
                 </Link>

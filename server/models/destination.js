@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { SiUniqlo } from "react-icons/si";
 
 const destinationSchema = new mongoose.Schema({
     name:String,
@@ -19,12 +20,13 @@ const destinationSchema = new mongoose.Schema({
     ],
     stays:[
         {
-            name:String,
+            title:String,
             desc:String,
+            img:String
         }
     ],
     bestTime:String,
-    placeId:String,
+    placeId: {type: String, unique:true}
 });
 
 export default mongoose.model("Destination", destinationSchema);

@@ -50,10 +50,17 @@ export const DestinationDetails = ({
             <section className='px-6 md:px-16 py-12'>
                 <h2 className='text-3xl font-semibold mb-8'>Where to stay</h2>
                 <div className='grid md:grid-cols-3 gap-8'>
-                    {stays.map((stays, index) => (
+                    {stays.map((stay, index) => (
                         <div key={index} className='bg-gray-100 rounded-lg shadow p-6'>
-                            <h3 className='text-xl font-semibold mb-2'>{stays.name}</h3>
-                            <p className='text-gray-700 text-sm'>{stays.desc}</p>
+                            <img
+                                src={`https://source.unsplash.com/600x400/?hotel,${encodeURIComponent(stay.title)}`}
+                                alt={stay.title || stay.desc}
+                                className='w-full h-56 object-cover'
+                            />
+                         
+                                <h3 className='text-xl font-semibold mb-2'>{stay.title || stay.desc}</h3>
+                                <p className='text-gray-700 text-sm'>{stay.desc}</p>
+                            
                         </div>
                     ))}
                 </div>

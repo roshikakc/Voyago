@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
@@ -9,18 +8,52 @@ export default function DestinationPage() {
     const [destinations, setDestinations] = useState([]);
 
     useEffect(() => {
-        const loadData = async () => {
-            const names = ["Kathmandu", "Tokyo", "Paris", "New York", "Rome", "Cairo",
-                "Rio de Janeiro", "Barcelona", "Istanbul", "Sydney", "Cape town", "Canada"];
-            const all = await Promise.all(
-                names.map(async (n) => {
-                    const res = await fetch(`http://localhost:5000/api/destination/${n}`);
-                    return await res.json();
-                })
-            );
-            setDestinations(all);
+        const fetchDestinations = async () => {
+            try {
+                // from database 
+                const res = await fetch(`http://localhost:5000/api/destination/`);
+                const data = await res.json();
+                console.log("Loaded from DB:", data);
+
+                const names = data.map(d => d.name);
+                const desiredNames = ["Kathmandu", "Kyoto", "Barcelona", "Istanbul", "Paris", "Cape Town",
+                    "New York City", "Rome", "Prague", "Marrakesh", "Oslo"
+                ]
+
+                const missing = desiredNames.filter(n => !names.includes(n));
+
+                let apiData = [];
+                if (missing.length > 0) {
+                    console.log("Fetching ,issing destinations:", missing);
+                    apiData = await Promise.all(
+                        missing.map(async (n) => {
+                            try {
+                                const res = await fetch(`http://localhost:5000/api/destination/${n}`);
+                                if (!res.ok) throw new Error("Failed to fetch " + n);
+                                return await res.json();
+                            } catch (err) {
+                                console.error("Error fetching:", n, err);
+                                return null;
+                            }
+                        })
+                    );
+                }
+
+                const merged = [...data, ...apiData.filter(Boolean)]; //merging database and api data
+
+                const unique = merged.filter(
+                    (item, index, self) =>
+                        index === self.findIndex(
+                            (d) => d._id === item._id || d.name === item.name
+                        )
+                );
+                setDestinations(unique);
+            } catch (err) {
+                console.error("Error loading destinations:", err);
+
+            }
         };
-        loadData();
+        fetchDestinations();
     }, []);
 
     return (
@@ -33,11 +66,11 @@ export default function DestinationPage() {
             <h4 className='text-xl text-gray-500 '>Explore some of our most loved travel spots</h4>
 
             <div className='flex flex-wrap gap-6 justify-center py-6'>
-                {destinations
-                    .filter(dest => dest && dest.name) // ensures defined
-                    .map(dest => (
-                        <DestinationCard key={dest.name} title={dest.name.toLowerCase()} />
-                    ))}
+                {destinations.map(dest => (
+                    <DestinationCard key={dest._id || dest.name}
+                        id={dest._id} image={dest.photoUrl} title={dest.name}
+                        location={dest.country} />
+                ))}
 
 
             </div>

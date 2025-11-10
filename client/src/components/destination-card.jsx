@@ -1,4 +1,3 @@
-import t1 from './../assets/image/t1.png';
 import {Link} from 'react-router-dom';
 
 export const DestinationCard = ({
