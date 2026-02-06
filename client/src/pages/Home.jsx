@@ -1,5 +1,6 @@
 import React, {useState, useEffect}from 'react'
 import { Link, useLocation } from 'react-router-dom';
+import {useAuth} from "./../components/AuthContext";
 import t1 from './../assets/image/t1.png';
 import t2 from './../assets/image/t2.jpeg';
 import t3 from './../assets/image/t3.png';
@@ -31,12 +32,15 @@ const AboutUsData = [
 
 export default function Home() {
 
+    const { isAuthenticated } = useAuth();
+    const location = useLocation();
+
      const [destinations, setDestinations] = useState([]);
     
         useEffect(() => {
             const fetchDestinations = async () => {
                 try {
-                     const desiredNames = ["Pattaya city", "Sapporo", "Seoul", "Zurich", "Cancun", "Kyoto"]
+                     const desiredNames = ["Pattaya city", "Sapporo", "Seoul", "Zurich", "Kyoto"]
                      const query = desiredNames.map(n=> encodeURIComponent(n)).join(',');
 
                     // from database 
@@ -90,8 +94,8 @@ export default function Home() {
                     <h4 className='text font-semibold flex items-center gap-2'>Explore the world </h4>
                     <h1 className='text-4xl md:text-5xl font-extrabold leading-tight'>Get out of the house and let's travel</h1>
                     <p className='text-gray-600 text-lg'>Welcome to Voyago, your ultimate travel companion for exploring the world! Whether you're seeking beaches, bustling cityscapes, or hidden gems off the beaten path, we're here to inspire and guide your adventures.</p>
-                    <Link to="/plan" state={{from: location.pathname}}
-                     className="inline-block px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-blue-500 hover:text-white w-max transition-all duration-300 transform hover:scale-105 shadow-md"> Plan your trip</Link>
+                    <Link to={isAuthenticated ? "/plan" : "/login"} state={{from: location.pathname}}
+                     className="inline-block px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full w-max transition-all duration-300 transform hover:scale-105 shadow-md"> Plan your trip</Link>
 
 
                 </div>
@@ -179,7 +183,7 @@ export default function Home() {
                 
                 
                             </div>
-                <Link to="/destination" className=' px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full md:w-max text-center transition'>
+                <Link to="/destination" className=' px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full md:w-max text-center transition-all duration-300 transform hover:scale-105 shadow-md'>
                     More destinations
                 </Link>
             </section>
@@ -188,7 +192,7 @@ export default function Home() {
             <section className='flex flex-col gap-6 py-24 items-center my-25  bg-gradient-to-b from-blue-50 via-blue-100 to-blue-50 '>
                 <h1 className='text-xl md:text-4xl font-bold'>Ready to start your adventure?</h1>
                 <h4 className='text-xl text-gray-400 '>Join thousands of travellers who trust voyago to plan their perfect trips</h4>
-                <Link to="/plan" className="inline-flex items-center px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-blue-800 hover:text-white w-max shadow-md gap-2"> Plan your trip <FaArrowRight className="text-lg" /> </Link>
+                <Link to="/plan" className="inline-flex items-center px-6 py-3 text-xl font-bold rounded-lg bg-[#0c4160] text-[#ccd8e4] hover:bg-[#134a7c] hover:text-white w-full md:w-max text-center transition-all duration-300 transform hover:scale-105 shadow-md gap-2"> Plan your trip <FaArrowRight className="text-lg" /> </Link>
             </section>
         </>
     )

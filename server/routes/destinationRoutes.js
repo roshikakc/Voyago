@@ -1,6 +1,31 @@
 import express from 'express';
 import fetch from "node-fetch";
 import Destination from '../models/destination.js';
+import {
+    getBestImage,
+    getBestHotelImage
+} from "../utils/imageFetcher.js";
+
+
+const emojiMap = {
+    attraction: "📍",
+    museum: "🏛️",
+    theme_park: "🎡",
+    viewpoint: "🌄",
+    zoo: "🦁",
+    gallery: "🖼️",
+    monument: "🗿",
+    castle: "🏰",
+    park: "🌳",
+    garden: "🌺",
+    beach: "🏖️",
+    hotel: "🏨",
+    guest_house: "🏡",
+    hostel: "🛏️",
+    motel: "🚗",
+    resort: "🌴"
+
+};
 
 const router = express.Router();
 
@@ -44,6 +69,7 @@ router.get("/id/:id", async (req, res) => {
 });
 
 //getting destination by name
+
 router.get("/:name", async (req, res) => {
 
     try {
@@ -54,8 +80,51 @@ router.get("/:name", async (req, res) => {
             name: new RegExp(`^${name}$`, "i")
         });
 
+        console.log("Destination found? ", !!destination, "Force refresh?", forceRefresh);
         if (destination && !forceRefresh) {
             console.log(`Found "${name}" in MongoDB`);
+            let updated = false;
+
+            // Fix main photo
+            if (destination.photoUrl && destination.photoUrl.includes("source.unsplash.com")) {
+                console.log(`Fixing main image for: ${destination.name}`);
+                destination.photoUrl = await getBestImage(destination.name);
+                updated = true;
+            }
+
+            // Fix attractions
+            destination.attractions = await Promise.all(
+                destination.attractions.map(async (a) => {
+                    if (a.img && a.img.includes("source.unsplash.com")) {
+                        console.log("Fixing attraction image:", a.title);
+                        a.img = await getBestImage(a.title);
+                        updated = true;
+                    }
+                    return a;
+                })
+            );
+
+            // Fix stays
+            destination.stays = await Promise.all(
+                destination.stays.map(async (s) => {
+                    if (s.img && s.img.includes("source.unsplash.com")) {
+                        console.log("Fixing stay image:", s.title);
+                        s.img = await getBestHotelImage(s.title);
+                        updated = true;
+                    }
+                    return s;
+                })
+            );
+
+            // Save only if something changed
+            if (updated) {
+                console.log("Saving updated image URLs to MongoDB...");
+                destination.markModified("attractions");
+                destination.markModified("stays");
+
+
+                await destination.save().catch(err => console.error("SAVE ERROR:", err));
+            }
             return res.json(destination);
         }
 
@@ -110,6 +179,13 @@ router.get("/:name", async (req, res) => {
             overview = wikiData.extract || "";
             photoUrl = wikiData.thumbnail?.source || "";
         }
+
+        const englishName =
+            place.extratags?.["name:en"] ||
+            place.display_name?.split(",")[0] ||
+            place.name;
+
+        const mainPhoto = await getBestImage(englishName);
 
         // attractions via overpass
         const overpassQuery = `
@@ -174,41 +250,42 @@ router.get("/:name", async (req, res) => {
             )
             .filter(e => e.tags["name:en"] || e.tags.name)
             .slice(0, 6)
-            .map((e) => {
+
+        const attraction = await Promise.all(
+            attractions.map(async (e) => {
                 const englishName = e.tags["name:en"] || e.tags.name;
+                
+                const type = e.tags.tourism;
+                const emoji = emojiMap[type] || "📌";
                 return {
                     title: englishName,
-                    desc: e.tags.description ||
-                        e.tags["description:en"] ||
-                        e.tags.tourism ||
-                        e.tags.historic ||
-                        e.tags.leisure ||
-                        "Tourist attraction",
-                    img: `https://source.unsplash.com/600x400/?${encodeURIComponent(
-                        e.tags.name + " " + (e.tags.tourism || "attraction")
-                    )}`,
+                    type,
+                    emoji,
+                 
                 };
-            });
+            })
+        );
 
         const stays = allTourism
             .filter((e) => ["hotel", "guest_house", "motel", "hostel", "resort"].includes(e.tags.tourism))
             .filter(e => e.tags["name:en"] || e.tags.name)
-            .slice(0, 6)
-            .map((e) => {
-                const englishName = (e.tags["name=en"] || e.tags.name || "")
-                .replace(/[^\x00-\x7F]/g, "");
-                return {
-                    title: e.tags.name || "Unamed Stay",
-                    desc: e.tags.tourism || "Hotel",
-                    img: `https://source.unsplash.com/600x400/?hotel,${encodeURIComponent(
-                        englishName + e.tags.name)}`,
-                };
-            });
+            .slice(0, 6);
 
-        const englishName =
-            place.extratags?.["name:en"] ||
-            place.display_name?.split(",")[0] ||
-            place.name;
+        const stay = await Promise.all(
+            stays.map(async (e) => {
+                const englishName = (e.tags["name:en"] || e.tags.name || "")
+                    .replace(/[^\x00-\x7F]/g, "");
+
+                const type = e.tags.tourism;
+                const emoji = emojiMap[type] || "🏨";
+                return {
+                    title: englishName || "Unamed Stay",
+                    type,
+                    emoji,
+                   
+                };
+            })
+        );
 
 
         const newDestination = new Destination({
@@ -217,11 +294,9 @@ router.get("/:name", async (req, res) => {
             subtitle: place.type,
             overview,
             coordinates: { lat: place.lat, lng: place.lon },
-            photoUrl:
-                photoUrl ||
-                `https://source.unsplash.com/800x600/?${encodeURIComponent(name)}`,
-            attractions,
-            stays,
+            photoUrl: mainPhoto,
+            attractions: attraction,
+            stays: stay,
             bestTime: "October to March",
             placeId: place.place_id?.toString() || "",
 

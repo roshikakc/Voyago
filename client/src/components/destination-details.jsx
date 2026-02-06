@@ -2,6 +2,7 @@ import React from "react";
 import { GrAttraction } from "react-icons/gr";
 
 
+
 export const DestinationDetails = ({
     image,
     title,
@@ -32,39 +33,56 @@ export const DestinationDetails = ({
             {/* top attractions */}
             <section className='px-6 md:px-16 py-12 bg-white'>
                 <h2 className='text-3xl font-semibold mb-8'>Top Attractions</h2>
-                <div className='grid md:grid-cols-3 gap-8'>
+
+                <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
                     {attractions.map((place, index) => (
-                        <div key={index} className='bg-gray-100 rounded-lg shadow hover:shadow-md transition overflow-hidden'>
-                            <img src={place.img} alt={place.title} className='w-full h-56 object-cover' />
-                            <div className='p-4'>
-                                <h3 className='text-xl font-semibold mb-2'>{place.title}</h3>
-                                <p className='text-gray-600 text-sm'>{place.desc}</p>
+                        <div
+                            key={index}
+                            className='bg-white border border-[#e7d8c9] rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 relative'
+                        >
+                            {/* Top Accent */}
+                            <div className='absolute top-0 left-0 w-full h-1.5 rounded-t-2xl bg-gradient-to-r from-[#0c4759] to-[#0c4760]' />
+
+                            {/* Emoji Badge */}
+                            <div className='w-16 h-16 mx-auto mb-4 flex items-center justify-center text-4xl rounded-full bg-[#faf3eb] border-2 border-[#e4c6a2] shadow'>
+                                {place.emoji}
                             </div>
+
+                            <h3 className='text-xl font-semibold text-center'>{place.title}</h3>
                         </div>
                     ))}
                 </div>
             </section>
+
 
 
             {/* where to stay  */}
-            <section className='px-6 md:px-16 py-12'>
-                <h2 className='text-3xl font-semibold mb-8'>Where to stay</h2>
-                <div className='grid md:grid-cols-3 gap-8'>
-                    {stays.map((stay, index) => (
-                        <div key={index} className='bg-gray-100 rounded-lg shadow p-6'>
-                            <img
-                                src={`https://source.unsplash.com/600x400/?hotel,${encodeURIComponent(stay.title)}`}
-                                alt={stay.title || stay.desc}
-                                className='w-full h-56 object-cover'
-                            />
-                         
-                                <h3 className='text-xl font-semibold mb-2'>{stay.title || stay.desc}</h3>
-                                <p className='text-gray-700 text-sm'>{stay.desc}</p>
-                            
-                        </div>
-                    ))}
-                </div>
-            </section>
+    
+<section className='px-6 md:px-16 py-12'>
+  <h2 className='text-3xl font-semibold mb-8'>Where to Stay</h2>
+
+  <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+    {stays.map((stay, index) => (
+      <div
+        key={index}
+        className='bg-white border border-[#e7d8c9] rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 relative'
+      >
+        {/* Top Accent */}
+        <div className='absolute top-0 left-0 w-full h-1.5 rounded-t-2xl bg-gradient-to-r from-[#0c4759] to-[#0c4760]' />
+
+        {/* Emoji Badge */}
+        <div className='w-16 h-16 mx-auto mb-4 flex items-center justify-center text-4xl rounded-full bg-[#faf3eb] border-2 border-[#e4c6a2] shadow'>
+          {stay.emoji}
+        </div>
+
+        <h3 className='text-xl font-semibold text-center'>
+          {stay.title || stay.desc}
+        </h3>
+      </div>
+    ))}
+  </div>
+</section>
+
 
             {/* best time to visit  */}
             <section className='px-6 md:px-16 py-12 mb-25'>

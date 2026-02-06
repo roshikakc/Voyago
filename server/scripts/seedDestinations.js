@@ -4,8 +4,7 @@ import Destination from '../models/destination.js';
 
 
 
-const cities = ["Pattaya city", "Kathmandu", "Kyoto", "Barcelona", "Istanbul", "Paris", 
-    "Cape Town", "New York City", "Rome", "Prague", "Marrakesh", "Oslo"];
+const cities = ["Pattaya city", "Kathmandu"];
 
     
 

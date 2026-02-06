@@ -15,14 +15,14 @@ const destinationSchema = new mongoose.Schema({
         {
             title:String,
             desc:String,
-            img:String,
+            emoji: String
         }
     ],
     stays:[
         {
             title:String,
             desc:String,
-            img:String
+            emoji: String
         }
     ],
     bestTime:String,

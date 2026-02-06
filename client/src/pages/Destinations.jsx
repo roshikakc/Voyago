@@ -16,8 +16,10 @@ export default function DestinationPage() {
                 console.log("Loaded from DB:", data);
 
                 const names = data.map(d => d.name);
-                const desiredNames = ["Kathmandu", "Kyoto", "Barcelona", "Istanbul", "Paris", "Cape Town",
-                    "New York City", "Rome", "Prague", "Marrakesh", "Oslo"
+                const desiredNames = ["Kathmandu", "Barcelona", "Istanbul", "Paris", "Cape Town",
+                    "Rome", "Prague", "Marrakesh", "Oslo"
+
+
                 ]
 
                 const missing = desiredNames.filter(n => !names.includes(n));

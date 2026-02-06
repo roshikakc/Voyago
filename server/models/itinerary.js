@@ -37,11 +37,6 @@ const itinerarySchema = new mongoose.Schema(
             numofTravelers: Number,
         },
 
-        algorithmUsed: {
-            type: [String],
-            enum: ["rule-based", "content-based", "knapsack", "greedy"],
-            default: ["rule-based", "content-based", "knapsack", "greedy"],
-        },
 
         itineraryDays: [
             {

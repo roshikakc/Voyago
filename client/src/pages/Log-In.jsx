@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
+
 
 export default function LogInPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const {login} = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
 
-    const from = location.state?. from || '/';
+    const from = location.state?. from || '/home';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,12 +21,13 @@ export default function LogInPage() {
             const res = await axios.post("http://localhost:5000/api/auth/login", {
                 email, password
             });
-            localStorage.setItem("token", res.data.token);
+
+            login (res.data.token, res.data.user);
+        
             localStorage.setItem("user", JSON.stringify(res.data.user));
 
-            window.dispatchEvent(new Event("userLogin"));
-            
-            navigate('/');
+            navigate(from, {replace: true});
+        
         }
         catch (e) {
             console.error(e);
