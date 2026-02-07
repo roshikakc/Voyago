@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../components/AuthContext";
-
-
 
 
 export default function Plan() {
@@ -19,18 +17,41 @@ export default function Plan() {
 
     });
 
+    const [countries, setCountries] = useState([]);
+    const [cities, setCities] = useState([]);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetch("http://localhost:5000/api/countries")
+            .then(res => res.json())
+            .then(data => setCountries(data))
+            .catch(err => console.error("Country load error:", err));
+    }, []);
 
     //disabling yesterday's date
     const today = new Date().toISOString().split("T")[0];
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         const { name, value } = e.target;
 
         if (name === "budget" && Number(value) > 100000) {
             return;
         }
+        if (name === "country") {
+            setFormData({ ...formData, country: value, city: "" });
+            setCities([]);
+
+            try {
+                const res = await fetch(`http://localhost:5000/api/cities/${value}`);
+                const data = await res.json();
+                setCities(data);
+            } catch (err) {
+                console.error("City load error:", err);
+            }
+            return;
+        }
+
         setFormData({ ...formData, [name]: value });
     };
 
@@ -66,8 +87,8 @@ export default function Plan() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    city: formData.city,
-                    country: formData.country,
+                    cityId: formData.city,
+                    countryId: formData.country,
                     startDate: formData.startDate,
                     endDate: formData.endDate,
                     budget: Number(formData.budget),
@@ -100,18 +121,41 @@ export default function Plan() {
                 <form onSubmit={handleSubmit} className='space-y-10'>
                     <div>
                         <label className='text-xl text-gray-700 font-semibold mb-2'>Country</label>
-                        <input type='text' name='country' value={formData.country} onChange={handleChange}
-                            className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'
-                            placeholder='Which country do you want to go?' />
+                        <select
+                            name="country"
+                            value={formData.country}
+                            onChange={handleChange}
+                            className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                        >
+                            <option value="">Select Country</option>
+                            {countries.map(country => (
+                                <option key={country._id} value={country._id}>
+                                    {country.name}
+                                </option>
+                            ))}
+                        </select>
+
                         {errors.country && <p className='text-red-500 text-sm mt-1'>{errors.country}</p>}
+
                     </div>
 
                     <div>
                         <label className='text-xl text-gray-700 font-semibold mb-1'>City</label>
-                        <input type='text' name='city' value={formData.city} onChange={handleChange} placeholder='e.g. Kathmandu, Lalitpur'
-                            className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400'
-                        />
+                        <select
+                            name="city"
+                            value={formData.city}
+                            onChange={handleChange}
+                            disabled={!formData.country}
+                            className='w-full bg-gray-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                        >
+                            <option value="">Select City</option>
+                            {cities.map(city => (
+                                <option key={city._id} value={city._id}>{city.name}</option>
+                            ))}
+                        </select>
+
                         {errors.city && <p className='text-red-500 text-sm mt-1'>{errors.city}</p>}
+
                     </div>
 
                     {/* date */}
@@ -132,7 +176,7 @@ export default function Plan() {
                     </div>
 
                     <div>
-                        <label className='text-xl text-gray-700 font-semibold mb-1'>Budget (Max Rs. 1,00,000)</label>
+                        <label className='text-xl text-gray-700 font-semibold mb-1'>Budget</label>
                         <input
                             type="number"
                             name="budget"
