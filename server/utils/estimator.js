@@ -31,6 +31,14 @@ export function estimateCostFromTags(tags = []) {
 export function estimateActivities(list = []) {
   return list.map(a => {
     const cost = a.cost != null ? a.cost : estimateCostFromTags(a.tags);
-    return { ...a, cost: Math.max(0, Math.round(cost)) };
+    return {
+      // _id: a._id,        // include the MongoDB id
+      // name: a.name,      // make sure name is explicitly passed
+      // city: a.city,      // city reference
+      // tags: a.tags || [], 
+      ...a,
+      tags: a.tags || [],
+      cost: Math.max(0, Math.round(cost)),
+    };
   });
 }

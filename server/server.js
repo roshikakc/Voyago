@@ -11,6 +11,9 @@ import itineraryRouter from"./routes/itineraryRouter.js";
 import countryRouter from "./routes/countryRoute.js"
 import cityRoute from "./routes/cityRoute.js";
 import activitiesRoute from "./routes/activitiesRoute.js";
+import save_itinerary from "./routes/historyRoute.js";
+import user_itineraries from "./routes/userItineraryRoute.js";
+
 
 dotenv.config();
 const app = express();
@@ -28,6 +31,8 @@ app.use("/api/itinerary", itineraryRouter);
 app.use("/api/countries", countryRouter );
 app.use("/api/cities", cityRoute);
 app.use("/api/activities",activitiesRoute);
+app.use("/api/save_itinerary",save_itinerary);
+app.use("/api/user_itineraries", user_itineraries);
 
 
 app.listen(5000, () => console.log("Server running on  http://localhost:5000"));

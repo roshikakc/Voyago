@@ -4,6 +4,7 @@ import Destination from "./pages/Destinations";
 import Plan from "./pages/Plan";
 import DestinationDetailsPage from "./pages/DestinationDetailsPage";
 import Itinerary from "./pages/Itinerary";
+import SavedItinerary from "./pages/SavedItinerary";
 import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import LogInPage from "./pages/Log-In";
@@ -31,6 +32,9 @@ function App() {
               <Route path="/profile" element={<Profile />} />
 
               <Route path="/itinerary" element={<Itinerary />} />
+              <Route path="/itinerary/:id" element={<Itinerary />} />
+
+              <Route path="/saved-itinerary/:id" element={<SavedItinerary />} />
 
 
               <Route path="/destination/:id" element={<DestinationDetailsPage />} />
@@ -43,6 +47,7 @@ function App() {
                   <Plan />
                 </ProtectedRoute>}
               />
+              <Route path="/plan/:id" element={<Plan />} />
             </Routes>
           </main>
 

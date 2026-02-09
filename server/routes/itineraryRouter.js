@@ -1,187 +1,156 @@
 import express from "express";
-import { fetchPOIsGeoapify } from "../utils/fetchGeoapify.js";
-import { parseCities } from "../utils/helpers.js";
+import city from "../models/city.js";
+import activity from "../models/activity.js";
 import { applyFiltering } from "../utils/filtering.js";
 import { estimateActivities } from "../utils/estimator.js";
 import { knapsackSelect } from "../utils/knapsack.js";
 import { splitIntoDays } from "../utils/greedy.js";
-import { kathmanduActivities } from "../utils/kathmanduActivities.js";
-
+import Itinerary from "../models/itinerary.js";
+import mongoose from "mongoose";
 
 
 const router = express.Router();
-const USE_STATIC_DATA = true; //  set false when done testing
+
 
 router.post("/", async (req, res) => {
-    console.log("Itinerary request:", req.body);
-
-    const {
-        city,
-        startDate,
-        endDate,
-        budget,
-        travellers,
-        interests = []
-    } = req.body;
-
-
-    const interestList = Array.isArray(interests)
-        ? interests.map(i => i.toLowerCase().trim()).filter(Boolean)
-        : String(interests)
-            .split(",")
-            .map(i => i.trim().toLowerCase())
-            .filter(Boolean);
-
-    if (isNaN(new Date(startDate)) || isNaN(new Date(endDate))) {
-        return res.status(400).json({
-            success: false,
-            error: "Invalid startDate or endDate. Use YYYY-MM-DD format."
-        });
-    }
-
-
-    if (USE_STATIC_DATA) {
-        const scored = applyFiltering(kathmanduActivities, interestList);
-        const estimated = estimateActivities(scored);
-
-        const totalDays =
-            Math.ceil(
-                (new Date(endDate) - new Date(startDate)) /
-                (1000 * 60 * 60 * 24)
-            ) + 1;
-
-        const maxHours = totalDays * 8;
-
-        const selected = knapsackSelect(
-            estimated,
-            Number(budget),
-            maxHours
-        );
-
-        const days = splitIntoDays(selected, startDate, endDate);
-
-        return res.json({
-            success: true,
-            meta: {
-                mode: "STATIC_TEST",
-                city,
-                travellers,
-                budget
-            },
-            days
-        });
-    }
-
-    console.log("Itinerary request:", req.body);
-    function generateEmptyDays(totalDays) {
-        const days = [];
-        for (let i = 1; i <= totalDays; i++) {
-            days.push({
-                day: i,
-                activities: [],
-            });
-        }
-        return days;
-    }
-
     try {
-        const { country, city, startDate, endDate, budget, travellers, interests } = req.body;
-        if (!city || !startDate || !endDate || !budget) {
-            return res.status(400).json({ error: "city, startDate, endDate and budget are required" });
+        console.log("Received body:", req.body);
+
+        const { cityId, countryId, startDate, endDate, budget, travellers, interests = [] } = req.body;
+
+        // Validate input
+        if (!cityId || !countryId || !startDate || !endDate || !budget || !travellers) {
+            return res.status(400).json({ error: "Missing required fields" });
         }
 
-        const cityList = parseCities(city);
-        const numTravellers = Math.max(1, Number(travellers) || 1);
-        const totalBudget = Number(budget) * numTravellers || 0;
+        const start = new Date(startDate);
+        const end = new Date(endDate);
 
-
-        //fetch POIS
-        //fetch POIs
-let allPOIs = [];
-for (const c of cityList) {
-    let lat, lon;
-    // simple lookup for demo
-    if (c.toLowerCase() === "kathmandu") {
-        lat = 27.7172;
-        lon = 85.3240;
-    } else {
-        console.warn(`No coordinates for ${c}, using default 0,0`);
-        lat = 0;
-        lon = 0;
-    }
-
-    const pois = await fetchPOIsGeoapify(lat, lon, interestList);
-    allPOIs.push(...pois.map(p => ({ ...p, city: c })));
-}
-
-console.log("All POIs:", allPOIs.length);
-
-//estimate cost and duration
-let estimated = estimateActivities(allPOIs); 
-
-
-
-        //estimate cost and duration
-        // let estimated = estimateActivities(allPOIs);
-        // estimated = estimated.map(a => ({ ...a, cost: Math.round((a.cost || 0) * numTravellers) }));
-
-        // console.log("After estimation:", estimated.length);
-
-        // normalize data before knapsack
-        // if (!estimated || estimated.length === 0) {
-        //     return res.json({
-        //         success: true,
-        //         meta: {
-        //             message: "No activities found, showing free exploration days"
-        //         },
-        //         days: generateEmptyDays(startDate, endDate)
-        //     });
-        // }
-        function generateEmptyDays(startDate, endDate) {
-            const s = new Date(startDate);
-            const e = new Date(endDate);
-            const totalDays = Math.ceil((e - s) / (1000 * 60 * 60 * 24)) + 1;
-
-            return Array.from({ length: totalDays }, (_, i) => ({
-                day: i + 1,
-                activities: []
-            }));
+        if (isNaN(start) || isNaN(end)) {
+            return res.status(400).json({ error: "Invalid date format" });
         }
 
+        // Find city
+        const cityDoc = await city.findById(cityId);
+        if (!cityDoc) {
+            return res.status(404).json({ error: "City not found" });
+        }
 
-        estimated = estimated.map(a => ({
-            ...a,
-            duration: a.duration && a.duration > 0 ? a.duration : 1,
-            cost: Math.max(0, a.cost || 0)
-        }));
+        // Fetch activities for city
+        const activities = await activity.find({ city: cityDoc._id }).lean();
+        console.log("Activities from DB:", activities);
+        // console.log("Activities found:", activities.length);
 
-        console.log("Normalized estimated sample:", estimated.slice(0, 3));
+        if (!activities.length) {
+            return res.status(404).json({ error: "No activities found for this city" });
+        }
+
+        // Normalize interests
+        const interestList = interests.map(i => i.toLowerCase().trim());
+
+        // Apply filters
+        const scored = applyFiltering(activities, interestList);
 
 
-        //compute trip days and max hours
-        const s = new Date(startDate);
-        const e = new Date(endDate);
-        const days = Math.ceil((e - s) / (1000 * 60 * 60 * 24)) + 1;
-        const maxHours = days * 8;
+        // Estimate cost/time
+        const estimated = estimateActivities(scored);
+        // console.log("Activities after estimation:", estimated);
 
-        //select activity in budget and time
-        const selected = knapsackSelect(estimated, totalBudget, maxHours);
-        const safeSelected = selected.length ? selected : estimated.slice(0, 6);
 
-        console.log("After knapsack:", safeSelected.length);
+        // Budget logic
+        const totalBudget = Number(budget) * Number(travellers);
 
-        //allocate day by day greedy
-        const allocated = splitIntoDays(safeSelected, startDate, endDate);
+        // Select best activities
+        const selected = knapsackSelect(estimated, totalBudget);
+
+        // Split across days
+        const itineraryDays = splitIntoDays(selected, startDate, endDate);
+
+        const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+        // Return success
+        // return res.json({
+        //     success: true,
+        //     meta: {
+        //         city: cityDoc.name,
+        //         totalDays,
+        //         travellers,
+        //         budget: totalBudget
+        //     },
+        //     days: itineraryDays
+        // });
+
+        // SAVE itinerary to DB
+        const newItinerary = new Itinerary({
+            city: new mongoose.Types.ObjectId(cityId),
+            country: new mongoose.Types.ObjectId(countryId),
+            title: "My Trip",
+            days: itineraryDays
+        });
+
+        await newItinerary.save();
 
         return res.json({
             success: true,
-            meta: { cities: cityList, days, travellers: numTravellers, budget: totalBudget },
-            days: allocated
+            itinerary: newItinerary,  // send back saved doc with _id
         });
+
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, error: err.message });
+        console.error("Itinerary Error:", err);
+        return res.status(500).json({ success: false, error: err.message });
+    }
+
+
+
+});
+
+// GET itinerary by ID
+router.get("/:id", async (req, res) => {
+    try {
+        const itinerary = await Itinerary.findById(req.params.id)
+            .populate({ path: "city" })
+            .populate({ path: "country", strictPopulate: false });
+        if (!itinerary) return res.status(404).json({ error: "Itinerary not found" });
+        res.json(itinerary);
+    } catch (err) {
+        console.error("Fetch itinerary error:", err);
+        res.status(500).json({ error: "Server error" });
     }
 });
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const deleted = await Itinerary.findByIdAndDelete(req.params.id);
+        if (!deleted) return res.status(404).json({ error: "Not found" });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: "Delete failed" });
+    }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const updated = await Itinerary.findByIdAndUpdate(
+      req.params.id,
+      {
+        title: req.body.title,
+        city: req.body.city,
+        country: req.body.country,
+        days: req.body.days
+      },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: "Trip not found" });
+
+    res.json({ success: true, updated });
+
+  } catch (err) {
+    res.status(500).json({ error: "Update failed" });
+  }
+});
+
+
 
 export default router;

@@ -21,7 +21,7 @@ export function splitIntoDays(activities = [], startDate, endDate) {
   for (const act of activities) {
     days[dayIndex].activities.push({
           name: act.name,
-          city: act.city,
+          city: act.city?.name || act.city,
           tags: act.tags,
           duration: act.duration,
           cost: act.cost,
